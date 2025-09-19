@@ -42,6 +42,38 @@ class AttackDao(metaclass=Singleton):
             created = True
 
         return created
+    
+    def find_attack_by_id(self, id:int) -> AbstractAttack:
+        """
+        Get all attack type names and return a list
+
+        :return: A list of all types
+        :rtype: List of str
+        """
+        with DBConnection().connection as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT *                                  "
+                    "  FROM tp.attack                    "
+                    " WHERE attack_type_name = %(id)s "
+                )
+
+                # to store raw results
+                res = cursor.fetchall()
+
+        # Create an empty list to store formatted results
+        type_attack: List[str] = []
+
+        # if the SQL query returned results (ie. res not None)
+        if res:
+            for row in res:
+                type_attack.append(row["attack_type_name"])
+
+                print(row["id_attack_type"])
+                print(row["attack_type_name"])
+                print(row["attack_type_description"])
+
+        return type_attack
 
 
 if __name__ == "__main__":
